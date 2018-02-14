@@ -11,7 +11,7 @@ class Controller implements CSProcess {
 	
   def long testInterval = 11000
   def long computeInterval = 2000
-  def int addition = 1
+  def int addition = -1
   
   def ChannelInput factor
   def ChannelOutput suspend

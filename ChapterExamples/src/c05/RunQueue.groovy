@@ -20,7 +20,7 @@ def testList = [ new QProducer ( put: QP2Q.out(),
                 		     elements: 5 ),
                  new QConsumer ( get: QC2Q.out(), 
                 		         receive: Q2QC.in(), 
-                		         delay: 0 )
+                		         delay: 500 )
                ]
 
 new PAR ( testList ).run()
