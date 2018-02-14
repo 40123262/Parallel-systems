@@ -21,7 +21,7 @@ class ResetNumbers implements CSProcess {
     
     def testList = [ new ResetPrefix ( prefixValue: initialValue, 
                                        outChannel: a.out(), 
-                                       inChannel: c.in(),
+                                       inChannel: c.in(),	
                                        resetChannel: resetChannel ),
                      new GPCopy ( inChannel: a.in(), 
                             	  outChannel0: outChannel, 

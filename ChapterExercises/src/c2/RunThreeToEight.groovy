@@ -9,6 +9,6 @@ One2OneChannel connect2 = Channel.createOne2One()
 def processList = [ new GenerateSetsOfThree ( outChannel: connect1.out() ),
                     new ListToStream ( inChannel: connect1.in(), 
                     		           outChannel: connect2.out() ),
-                    new CreateSetsOfEight ( inChannel: connect2.in() , g : 4)
+                    new CreateSetsOfEight ( inChannel: connect2.in() , g : 7)
                   ]
 new PAR (processList).run()

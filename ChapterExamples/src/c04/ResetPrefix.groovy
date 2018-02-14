@@ -20,13 +20,20 @@ class ResetPrefix implements CSProcess {
     outChannel.write(prefixValue)
     while (true) {
       def index = alt.priSelect()
+	  println index
       if (index == 0 ) {    // resetChannel input
+		  println "Trying to read from resetChannel"
         def resetValue = resetChannel.read()
-		inChannel.read()
+		println "Reading from resetChannel complete"
+	//	inChannel.read()
+		println "Trying to output resetValue"
         outChannel.write(resetValue)
+		println "Output from resetValue complete"
       }
       else {    //inChannel input 
-        outChannel.write(inChannel.read())        
+		  println "Trying to read from successor to GPCOPY"
+        outChannel.write(inChannel.read())     
+		println "writing to GPCopy complete"
       }
     }
   }

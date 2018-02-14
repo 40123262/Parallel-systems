@@ -19,5 +19,6 @@ class GenerateSetsOfThree implements CSProcess {
 		for ( i in 0 ..< threeList.size)outChannel.write(threeList[i])
 			outChannel.write([-1,-1,-1])		
 		//write the terminating List as per exercise definition
+			println "Generate sets of 3 finished"
 	}
 }

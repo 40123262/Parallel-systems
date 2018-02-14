@@ -16,5 +16,7 @@ class ListToStream implements CSProcess{
 			inList = inChannel.read()
 		}
 		outChannel.write(-1)
+		println "List to stream finished"
 	}
+	
 }
