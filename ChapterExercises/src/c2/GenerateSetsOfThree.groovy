@@ -5,7 +5,7 @@ import jcsp.lang.*
 class GenerateSetsOfThree implements CSProcess {
 	
 	def ChannelOutput outChannel
-	
+	def testList = []
 	void run(){
 		def threeList = [
 		                 [1, 2, 3], 
@@ -16,6 +16,7 @@ class GenerateSetsOfThree implements CSProcess {
 		                 [16, 17, 18 ],
 		                 [19, 20, 21], 
 		                 [22, 23, 24] ]
+		testList = threeList
 		for ( i in 0 ..< threeList.size)outChannel.write(threeList[i])
 			outChannel.write([-1,-1,-1])		
 		//write the terminating List as per exercise definition
