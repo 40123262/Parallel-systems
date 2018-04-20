@@ -14,7 +14,6 @@ class GSCopy implements CSProcess {
       def i = inChannel.read()
       // output the input value in sequence to each output channel
 	  outChannel0.write(i)
-	//  i = inChannel.read()
 	  outChannel1.write(i)
     }
   }

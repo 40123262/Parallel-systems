@@ -38,14 +38,14 @@ class Scale implements CSProcess {
           suspend.read()          // its a signal, no data content
           factor.write(scaling)   //reply with current value of scaling
           def suspended = true
-          println "Suspended"
+          outChannel.write("Suspended\n")
           while ( suspended ) {
 			  
             switch ( suspendedAlt.priSelect() ) {
 				
               case SUSPENDED_INJECT:
                 scaling = injector.read()   //this is the resume signal as well
-                println "Injected scaling is $scaling"
+               outChannel.write("Injected scaling is " + scaling.toString()+"\n")
                 suspended = false
                 timeout = timer.read() + DOUBLE_INTERVAL
                 timer.setAlarm ( timeout )
@@ -56,7 +56,7 @@ class Scale implements CSProcess {
                 def result = new ScaledData()
                 result.original = inValue
                 result.scaled = inValue
-                outChannel.write ( result )  
+                outChannel.write ( result ) 
                 break
             }  // end-switch
           } //end-while
@@ -66,7 +66,7 @@ class Scale implements CSProcess {
           timeout = timer.read() + DOUBLE_INTERVAL
           timer.setAlarm ( timeout )
           scaling = scaling * multiplier
-          println "Normal Timer: new scaling is $scaling"
+        //  outChannel.write("Normal Timer: new scaling is " + scaling.toString()+"\n")
           break
 		  
         case NORMAL_IN:
@@ -74,7 +74,7 @@ class Scale implements CSProcess {
           def result = new ScaledData()
           result.original = inValue
           result.scaled = inValue * scaling
-          outChannel.write ( result )  
+          outChannel.write ( result ) 
           break
 		  
       } //end-switch

@@ -22,14 +22,11 @@ def network = [ new GNumbers ( outChannel: data.out() ),
                             factor: oldScale.out(),
                             suspend: pause.in(),
                             injector: newScale.in(),
-                            scaling: 2 ),
-                new Controller ( testInterval: 11000,
-                		         computeInterval: 3000,
-                                 factor: oldScale.in(),
-                                 suspend: pause.out(),
-                                 injector: newScale.out() ),
-                new GPrint ( inChannel: scaledData.in(),
-                		     heading: "Original      Scaled",
-                		     delay: 0)
+							scaling: 2),
+                new ControllerInterface ( inChannel:oldScale.in(),
+                              		      suspend: pause.out(),
+										  inject: newScale.out() ,
+										  console: scaledData.in(),
+										  scaling: 2)
               ]
 new PAR ( network ).run()                                                            

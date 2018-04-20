@@ -1,11 +1,17 @@
 package c5
-     
+ 
+// copyright 2012-13 Jon Kerridge
+// Let's Do It In Parallel
+
+
 import jcsp.lang.*
 import groovyJCSP.*
-import c05.ScaledData     
-   
+
 class Scale implements CSProcess {
-  def int scaling
+	
+  def int scaling = 2
+  def int multiplier = 2
+  
   def ChannelOutput outChannel
   def ChannelOutput factor
   def ChannelInput inChannel
@@ -15,59 +21,63 @@ class Scale implements CSProcess {
   void run () {
     def SECOND = 1000
     def DOUBLE_INTERVAL = 5 * SECOND
-    def SUSPEND  = 0
-    def INJECT   = 1
-    def TIMER    = 2
-    def INPUT    = 3
-    
+    def NORMAL_SUSPEND  = 0
+    def NORMAL_TIMER    = 1
+    def NORMAL_IN       = 2
+    def SUSPENDED_INJECT = 0
+    def SUSPENDED_IN     = 1    
     def timer = new CSTimer()
-    def scaleAlt = new ALT ( [ suspend, injector, timer, inChannel ] )
-    
-    def preCon = new boolean [4]
-    preCon[SUSPEND] = true
-    preCon[INJECT] = false
-    preCon[TIMER] = true
-    preCon[INPUT] = true
-    def suspended = false
-                                                                    
+    def normalAlt = new ALT ( [ suspend, timer, inChannel ] )
+    def suspendedAlt = new ALT ( [ injector, inChannel ] )    
     def timeout = timer.read() + DOUBLE_INTERVAL
     timer.setAlarm ( timeout )
-    
     while (true) {
-      switch ( scaleAlt.priSelect(preCon) ) {
-        case SUSPEND :
-          //  deal with suspend input      
-		suspend.read()
-		factor.write(scaling)  
-		println "Suspended"
-		preCon[INJECT] = true
-		preCon[TIMER]=false
+      switch ( normalAlt.priSelect() ) {
+		  
+        case NORMAL_SUSPEND :
+          suspend.read()          // its a signal, no data content
+          factor.write(scaling)   //reply with current value of scaling
+          def suspended = true
+          outChannel.write("Suspended\n")
+          while ( suspended ) {
+			  
+            switch ( suspendedAlt.priSelect() ) {
+				
+              case SUSPENDED_INJECT:
+                scaling = injector.read()   //this is the resume signal as well
+               outChannel.write("Injected scaling is " + scaling.toString()+"\n")
+                suspended = false
+                timeout = timer.read() + DOUBLE_INTERVAL
+                timer.setAlarm ( timeout )
+                break
+				
+              case SUSPENDED_IN:
+                def inValue = inChannel.read()
+                def result = new ScaledData()
+                result.original = inValue
+                result.scaled = inValue
+                outChannel.write ( result.toString() + "\n" ) 
+                break
+            }  // end-switch
+          } //end-while
           break
-        case INJECT:
-          //  deal with inject input
-		scaling = injector.read()   //this is the resume signal as well
-		println "Injected scaling is $scaling"
-		timeout = timer.read() + DOUBLE_INTERVAL
-		timer.setAlarm ( timeout )
-		preCon[INJECT] = false
-		preCon[TIMER]=true
-          break
-        case TIMER:
-          //  deal with Timer input
+		  
+        case NORMAL_TIMER:
           timeout = timer.read() + DOUBLE_INTERVAL
           timer.setAlarm ( timeout )
-          scaling = scaling * 2
-          println "Normal Timer: new scaling is $scaling"
+          scaling = scaling * multiplier
+          outChannel.write("Normal Timer: new scaling is " + scaling.toString()+"\n")
           break
-        case INPUT:
-          //   deal with Input channel 
-		def inValue = inChannel.read()
-		def result = new ScaledData()
-		result.original = inValue
-		result.scaled = inValue * scaling
-		outChannel.write ( result )
+		  
+        case NORMAL_IN:
+          def inValue = inChannel.read()
+          def result = new ScaledData()
+          result.original = inValue
+          result.scaled = inValue * scaling
+          outChannel.write ( result.toString() + "\n") 
           break
+		  
       } //end-switch
     } //end-while
   } //end-run
-}
+} // end Scale

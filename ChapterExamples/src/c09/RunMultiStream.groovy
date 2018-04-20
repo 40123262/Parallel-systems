@@ -9,8 +9,8 @@ import phw.util.Ask
 
 def sources = Ask.Int ("Number of event sources between 1 and 9 ? ", 1, 9)
 
-minTimes = [ 10, 20, 30, 40, 50, 10, 20, 30, 40 ]
-maxTimes = [ 100, 150, 200, 50, 60, 30, 60, 100, 80 ]  
+minTimes = [ 100, 100, 100, 100, 100, 100, 100, 100, 100 ]
+maxTimes = [ 101, 101, 101, 101, 101, 101, 101, 101, 101 ]  
       
 def es2ep = Channel.one2oneArray(sources)
 

@@ -33,19 +33,23 @@ class Server implements CSProcess{
           if ( dataMap.containsKey(key) ) 
             clientSend.write(dataMap[key])          
           else 
+          {
             thisServerRequest.write(key)
+			println "			-Sent request to the Other server(key: $key not here)"
+          }
           //end if 
           break
         case OTHER_REQUEST :
           def key = otherServerRequest.read()
           if ( dataMap.containsKey(key) ) 
-            otherServerSend.write(dataMap[key])          
+            otherServerSend.write(dataMap[key]) 
           else 
             otherServerSend.write(-1)
           //end if 
           break
         case THIS_RECEIVE :
-          clientSend.write(thisServerReceive.read() )
+	      println "			-Other server found key, sending to client now"
+          clientSend.write(thisServerReceive.read() )	 
           break
       } // end switch              
     } //end while   

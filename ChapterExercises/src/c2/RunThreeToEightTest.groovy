@@ -25,8 +25,7 @@ void testList() {
 		
 		assertTrue (list.lastList == [-1,-1,-1])
 				
-	//	def rest = (prod.testList[0].size()*prod.testList.size())%consumer.g
-	//	assertTrue(rest==0);
+	
 		
 }
 
